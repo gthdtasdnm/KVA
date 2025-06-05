@@ -23,7 +23,14 @@ public record Card(Rank rank, Suit suit) implements Comparable<Card> {
      */
     @Override
     public int compareTo(Card other) {
-        //TODO implement
-        return 0;
+        // Zuerst nach Rank vergleichen
+        int rankCompare = Integer.compare(this.rank.ordinal(), other.rank.ordinal());
+
+        // Wenn Rank gleich, dann Suit vergleichen
+        if (rankCompare == 0) {
+            return Integer.compare(this.suit.ordinal(), other.suit.ordinal());
+        }
+
+        return rankCompare;
     }
 }

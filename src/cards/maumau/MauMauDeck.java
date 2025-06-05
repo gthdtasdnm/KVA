@@ -1,7 +1,11 @@
 package cards.maumau;
 
 import cards.Card;
+import cards.Rank;
+import cards.Suit;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,7 +24,20 @@ public class MauMauDeck {
      * @return A list containing the generated deck of cards.
      */
     public static List<Card> makeDeck(int numDecks) {
-        //TODO implement
-        return null;
+        List<Card> deck = new ArrayList<>();
+
+        for(int i = 0; i < numDecks;i++){
+            for(Suit suit : Suit.values()){
+                for(Rank rank : Rank.values()){
+                    //nur Ränge ab 7
+                    if(rank.ordinal() >= rank.SEVEN.ordinal()){
+                        deck.add(new Card(rank, suit));
+                    }
+                }
+            }
+        }
+
+        Collections.shuffle(deck);
+        return deck;
     }
 }
