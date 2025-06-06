@@ -77,6 +77,10 @@ class ActionHandler {
 
         current.playCard(c);
 
+        // if the player did not announce "Mau" before playing the last card
+        if (current.getCards().isEmpty() && !game.getPlayerHandler().didCallMau(current))
+            current.drawCards(1);
+
         if (chosenSuit != null && c.suit() == chosenSuit)
             chosenSuit = null;
 
