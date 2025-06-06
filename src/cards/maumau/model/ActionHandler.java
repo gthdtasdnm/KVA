@@ -203,11 +203,12 @@ class ActionHandler {
         if (ctr7 > 0)
             return c.rank() == Rank.SEVEN;
 
+        if (chosenSuit != null)
+            return c.suit() == chosenSuit;
+
         if (state == GameState.PLAY) {
             if (c.rank() == Rank.JACK)
                 return true;
-            if (chosenSuit != null)
-                return c.suit() == chosenSuit;
             final Card top = game.getCardHandler().top();
             return c.suit() == top.suit() || c.rank() == top.rank();
         }

@@ -28,11 +28,12 @@ class PlayerHandler {
         @Override
         public void nextTurn(int n) {
             localNextTurn(n);
+            remember = null;
         }
 
         @Override
         public void mau(Player p) {
-            if (p == getCurrentPlayer() && p.getCards().size() == 1) {
+            if (p.getCards().size() == 1) {
                 remember = p;
                 state = new MauState();
             }
@@ -40,7 +41,7 @@ class PlayerHandler {
 
         @Override
         public void maumau(Player p) {
-            if (p == getCurrentPlayer() && p.getCards().isEmpty()) {
+            if (p.getCards().isEmpty()) {
                 finishPlayer(p);
                 if (players.size() <= 1) {
                     ranking.addAll(players);
@@ -56,20 +57,18 @@ class PlayerHandler {
         @Override
         public void nextTurn(int n) {
             localNextTurn(n);
-            remember = null;
-            state = new DefaultState();
         }
 
         @Override
         public void mau(Player p) {
-            if (p == getCurrentPlayer() && p.getCards().size() == 1) {
+            if (p.getCards().size() == 1) {
                 remember = p;
             }
         }
 
         @Override
         public void maumau(Player p) {
-            if (p == remember && p == getCurrentPlayer() && p.getCards().isEmpty()) {
+            if (p == remember && p.getCards().isEmpty()) {
                 finishPlayer(p);
                 remember = null;
                 if (players.size() <= 1) {
@@ -165,7 +164,6 @@ class PlayerHandler {
         for (int i = 0; i < n; i++) {
             players.addLast(players.removeFirst());
         }
-        remember = null;
     }
 
     /**
