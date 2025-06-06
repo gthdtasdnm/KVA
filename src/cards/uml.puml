@@ -1,0 +1,239 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+enum Rank {
+  + toString()
+}
+
+enum Suit {
+  + toString()
+}
+
+class MauMauGame {
+  + usage()
+  + main(String[] args)
+  + makeGeneralGame(args)
+  + makeSimpleGame()
+  + MauMau(5, deck)
+  + makeGeneralGame(String[] args)
+  + MauMau(numCardsPerPlayer, deck)
+  + start(MauMau game)
+  + PlayerFrame(player)
+}
+
+class MauMauDeck {
+  + MauMauDeck()
+  + makeDeck(int numDecks)
+}
+
+class CardListRenderer {
+  + getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+}
+DefaultListCellRenderer <|-- CardListRenderer
+
+class GameTableModel {
+  + GameTableModel(MauMau game)
+  + update()
+  + getRowCount()
+  + getColumnCount()
+  + getValueAt(int rowIndex, int columnIndex)
+  + showRanking()
+}
+AbstractTableModel <|-- GameTableModel
+
+class PlayerFrame {
+  + PlayerFrame(Player player)
+  + initializeUI()
+  + makeButton(String text, ActionListener listener)
+  + chooseCard(ActionEvent e)
+  + update()
+  + updateCardList()
+  + updateTopCardLabel()
+  + updateStateLabel()
+  + updateBorderColor()
+  + error(String msg)
+  + message(String msg)
+}
+JFrame <|-- PlayerFrame
+IObserver <|.. PlayerFrame
+
+class PlayerHandler {
+  + nextTurn(int n)
+  + mau(Player p)
+  + maumau(Player p)
+  + getPlayers()
+  + getRanking()
+  + addPlayer(Player player)
+  + localNextTurn(int n)
+  + finishPlayer(Player p)
+  + getCurrentPlayer()
+}
+
+class MauMau {
+  + MauMau(int numCardsPerPlayer, List<Card> deck)
+  + addObserver(IObserver observer)
+  + notifyObservers()
+  + sendMessage(String msg)
+  + getPlayerHandler()
+  + getCardHandler()
+  + getActionHandler()
+  + getChosenSuit()
+  + get7Counter()
+  + startGame()
+  + toString()
+  + mkString(List<A> list, Function<? super A, String> func, String prefix, String delimiter, String suffix)
+  + mkString(List<A> list, String prefix, String delimiter)
+  + getPlayers()
+  + addPlayer(String name)
+  + getRanking()
+  + getCurrentPlayer()
+  + getDrawPile()
+  + getDiscardPile()
+  + getGameState()
+}
+
+class ActionHandler {
+  + addPlayer(Player player)
+  + startGame()
+  + finishGame()
+  + cancelGame()
+  + chooseCard(Card c)
+  + chooseSuit(Suit suit)
+  + skip()
+  + no7()
+  + getGame()
+  + getChosenSuit()
+  + setChosenSuit(Suit chosenSuit)
+  + get7Counter()
+  + reset7Counter()
+  + increment7Counter()
+  + getGameState()
+  + canPlay(Card c)
+}
+
+class CardHandler {
+  + getDrawPile()
+  + getDiscardPile()
+  + drawCard()
+  + reuseDiscardedCards()
+  + dealCards()
+  + discard(Card c)
+  + top()
+}
+
+interface IObserver {
+  + update()
+  + message(String msg)
+}
+
+class Player {
+  + toString()
+  + getName()
+  + getGame()
+  + getCards()
+  + drawCards(int n)
+  + playCard(Card c)
+  + canPlay(Card c)
+  + chooseCard(Card c)
+  + chooseSuit(Suit s)
+  + skip()
+  + no7()
+  + mau()
+  + maumau()
+  + isCurrentPlayer()
+}
+
+enum GameState {
+}
+
+class RankTest {
+  + toStringTest()
+}
+
+class SuitTest {
+  + toStringTest()
+}
+
+class CardTest {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + compareToTest()
+}
+
+class MauMauDeckTest {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + dealCardsTest()
+}
+
+class MauMau3Test {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + game()
+  + MauMau(5, deck)
+}
+
+class MauMau2Test {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + game()
+  + MauMau(5, deck)
+}
+
+class MauMau9Test {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + game()
+  + MauMau(4, deck)
+}
+
+class MauMau8Test {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + game()
+  + MauMau(4, deck)
+}
+
+class MauMau4Test {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + game()
+  + MauMau(5, deck)
+}
+
+class MauMau5Test {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + game()
+  + MauMau(5, deck)
+}
+
+class MauMau1Test {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + game()
+  + MauMau(5, deck)
+}
+
+class CardHandlerTest {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + dealCardsTest()
+  + MauMau(5, deck)
+}
+
+class MauMau7Test {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + game()
+  + MauMau(5, deck)
+}
+
+class MauMau6Test {
+  + c(Rank r, Suit s)
+  + Card(r, s)
+  + game()
+  + MauMau(5, deck)
+}
+
+@enduml

@@ -27,6 +27,7 @@ class ActionHandler {
      */
     void addPlayer(Player player) {
         //TODO implement
+        game.getPlayerHandler().addPlayer(player);
     }
 
     /**
