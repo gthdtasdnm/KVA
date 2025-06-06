@@ -2,6 +2,7 @@ package cards.maumau.model;
 
 import cards.Card;
 import cards.Suit;
+import cards.Rank;
 
 /**
  * Manages the actions and state transitions within a MauMau game.
@@ -10,6 +11,7 @@ class ActionHandler {
     private final MauMau game;
     private Suit chosenSuit;
     private int ctr7 = 0;
+    private GameState state = GameState.GAME_INITIALIZED;
 
     /**
      * Constructs an ActionHandler for the specified MauMau game.
@@ -27,7 +29,8 @@ class ActionHandler {
      */
     void addPlayer(Player player) {
         //TODO implement
-        game.getPlayerHandler().addPlayer(player);
+        if (state == GameState.GAME_INITIALIZED)
+            game.getPlayerHandler().addPlayer(player);
     }
 
     /**
@@ -35,6 +38,10 @@ class ActionHandler {
      */
     void startGame() {
         //TODO implement
+        if (state != GameState.GAME_INITIALIZED)
+            return;
+        game.getCardHandler().dealCards();
+        state = GameState.PLAY;
     }
 
     /**
@@ -42,6 +49,7 @@ class ActionHandler {
      */
     void finishGame() {
         //TODO implement
+        state = GameState.GAME_OVER;
     }
 
     /**
@@ -49,6 +57,7 @@ class ActionHandler {
      */
     void cancelGame() {
         //TODO implement
+        state = GameState.GAME_CANCELED;
     }
 
     /**
@@ -58,6 +67,37 @@ class ActionHandler {
      */
     void chooseCard(Card c) {
         //TODO implement
+        if (state != GameState.PLAY)
+            return;
+        final Player current = game.getCurrentPlayer();
+        if (current == null || !current.getCards().contains(c))
+            return;
+        if (!canPlay(c))
+            return;
+
+        current.playCard(c);
+
+        if (chosenSuit != null && c.suit() == chosenSuit)
+            chosenSuit = null;
+
+        switch (c.rank()) {
+            case SEVEN -> {
+                increment7Counter();
+                game.getPlayerHandler().nextTurn(1);
+            }
+            case EIGHT -> {
+                reset7Counter();
+                game.getPlayerHandler().nextTurn(2);
+            }
+            case JACK -> {
+                chosenSuit = null;
+                state = GameState.CHOOSE_SUIT;
+            }
+            default -> {
+                reset7Counter();
+                game.getPlayerHandler().nextTurn(1);
+            }
+        }
     }
 
     /**
@@ -67,6 +107,11 @@ class ActionHandler {
      */
     void chooseSuit(Suit suit) {
         //TODO implement
+        if (state != GameState.CHOOSE_SUIT)
+            return;
+        chosenSuit = suit;
+        state = GameState.PLAY;
+        game.getPlayerHandler().nextTurn(1);
     }
 
     /**
@@ -74,6 +119,15 @@ class ActionHandler {
      **/
     void skip() {
         //TODO implement
+        if (state != GameState.PLAY)
+            return;
+        if (ctr7 > 0)
+            return;
+        final Player current = game.getCurrentPlayer();
+        if (current == null)
+            return;
+        current.drawCards(1);
+        game.getPlayerHandler().nextTurn(1);
     }
 
     /**
@@ -81,6 +135,13 @@ class ActionHandler {
      */
     void no7() {
         //TODO implement
+        if (state != GameState.PLAY || ctr7 == 0)
+            return;
+        final Player current = game.getCurrentPlayer();
+        if (current == null)
+            return;
+        current.drawCards(ctr7 * 2);
+        reset7Counter();
     }
 
     /**
@@ -101,20 +162,7 @@ class ActionHandler {
         return chosenSuit;
     }
 
-    /**
-     * Sets the suit chosen by a player after playing a Jack card.
-     *
-     * @param chosenSuit The suit chosen by the player.
-     */
-    void setChosenSuit(Suit chosenSuit) {
-        this.chosenSuit = chosenSuit;
-    }
 
-    /**
-     * Returns the number of number 7 cards played recently.
-     *
-     * @return The number of number 7 cards played recently.
-     */
     int get7Counter() {
         return ctr7;
     }
@@ -138,7 +186,7 @@ class ActionHandler {
      */
     GameState getGameState() {
         //TODO implement
-        return null;
+        return state;
     }
 
     /**
@@ -149,6 +197,20 @@ class ActionHandler {
      */
     boolean canPlay(Card c) {
         //TODO implement
+        if (state != GameState.PLAY || c == null)
+            return false;
+
+        if (ctr7 > 0)
+            return c.rank() == Rank.SEVEN;
+
+        if (state == GameState.PLAY) {
+            if (c.rank() == Rank.JACK)
+                return true;
+            if (chosenSuit != null)
+                return c.suit() == chosenSuit;
+            final Card top = game.getCardHandler().top();
+            return c.suit() == top.suit() || c.rank() == top.rank();
+        }
         return false;
     }
 }
