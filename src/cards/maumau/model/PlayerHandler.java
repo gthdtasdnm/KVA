@@ -160,6 +160,8 @@ class PlayerHandler {
         if (players.isEmpty()) {
             return;
         }
+
+
         n = ((n % players.size()) + players.size()) % players.size();
         for (int i = 0; i < n; i++) {
             players.addLast(players.removeFirst());
