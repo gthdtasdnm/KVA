@@ -140,6 +140,14 @@ class PlayerHandler {
     }
 
     /**
+     * Returns {@code true} if the given player has called "Mau" and is
+     * therefore allowed to finish the game with an empty hand.
+     */
+    boolean didCallMau(Player p) {
+        return state instanceof MauState && remember == p;
+    }
+
+    /**
      * Adds a player to the game.
      *
      * @param player The player to add.
