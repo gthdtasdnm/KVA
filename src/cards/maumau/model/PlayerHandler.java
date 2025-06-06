@@ -12,6 +12,7 @@ class PlayerHandler {
     private final List<Player> players = new LinkedList<>();
     private final List<Player> ranking = new ArrayList<>();
     private Player remember;
+    private Player penalized;
     private PlayerHandlerState state = new DefaultState();
 
     /** State pattern interface for the handler. */
@@ -99,6 +100,10 @@ class PlayerHandler {
     void nextTurn(int n) {
         //TODO implement
         state.nextTurn(n);
+        if (penalized != null && penalized == getCurrentPlayer()) {
+            penalized.drawCards(1);
+            penalized = null;
+        }
     }
 
     /**
@@ -148,6 +153,14 @@ class PlayerHandler {
     }
 
     /**
+     * Marks a player who failed to announce "Mau" so that they draw an
+     * additional penalty card at the start of their next turn.
+     */
+    void flagMissedMau(Player p) {
+        this.penalized = p;
+    }
+
+    /**
      * Adds a player to the game.
      *
      * @param player The player to add.
@@ -185,6 +198,9 @@ class PlayerHandler {
         //TODO implement
         players.remove(p);
         ranking.add(p);
+        if (penalized == p) {
+            penalized = null;
+        }
     }
 
     /**
