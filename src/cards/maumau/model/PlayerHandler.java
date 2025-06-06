@@ -12,6 +12,76 @@ class PlayerHandler {
     private final List<Player> players = new LinkedList<>();
     private final List<Player> ranking = new ArrayList<>();
     private Player remember;
+    private PlayerHandlerState state = new DefaultState();
+
+    /** State pattern interface for the handler. */
+    private interface PlayerHandlerState {
+        void nextTurn(int n);
+
+        void mau(Player p);
+
+        void maumau(Player p);
+    }
+
+    /** Normal state when no player has called "Mau". */
+    private class DefaultState implements PlayerHandlerState {
+        @Override
+        public void nextTurn(int n) {
+            localNextTurn(n);
+        }
+
+        @Override
+        public void mau(Player p) {
+            if (p == getCurrentPlayer() && p.getCards().size() == 1) {
+                remember = p;
+                state = new MauState();
+            }
+        }
+
+        @Override
+        public void maumau(Player p) {
+            if (p == getCurrentPlayer() && p.getCards().isEmpty()) {
+                finishPlayer(p);
+                if (players.size() <= 1) {
+                    ranking.addAll(players);
+                    players.clear();
+                    game.getActionHandler().finishGame();
+                }
+            }
+        }
+    }
+
+    /** State after a player has called "Mau". */
+    private class MauState implements PlayerHandlerState {
+        @Override
+        public void nextTurn(int n) {
+            localNextTurn(n);
+            remember = null;
+            state = new DefaultState();
+        }
+
+        @Override
+        public void mau(Player p) {
+            if (p == getCurrentPlayer() && p.getCards().size() == 1) {
+                remember = p;
+            }
+        }
+
+        @Override
+        public void maumau(Player p) {
+            if (p == remember && p == getCurrentPlayer() && p.getCards().isEmpty()) {
+                finishPlayer(p);
+                remember = null;
+                if (players.size() <= 1) {
+                    ranking.addAll(players);
+                    players.clear();
+                    game.getActionHandler().finishGame();
+                } else {
+                    state = new DefaultState();
+                }
+            }
+        }
+    }
 
     /**
      * Constructs a PlayerHandler for the specified MauMau game.
@@ -29,6 +99,7 @@ class PlayerHandler {
      */
     void nextTurn(int n) {
         //TODO implement
+        state.nextTurn(n);
     }
 
     /**
@@ -38,6 +109,7 @@ class PlayerHandler {
      */
     void mau(Player p) {
         //TODO implement
+        state.mau(p);
     }
 
     /**
@@ -47,6 +119,7 @@ class PlayerHandler {
      */
     void maumau(Player p) {
         //TODO implement
+        state.maumau(p);
     }
 
     /**
@@ -85,6 +158,14 @@ class PlayerHandler {
      */
     private void localNextTurn(int n) {
         //TODO implement
+        if (players.isEmpty()) {
+            return;
+        }
+        n = ((n % players.size()) + players.size()) % players.size();
+        for (int i = 0; i < n; i++) {
+            players.addLast(players.removeFirst());
+        }
+        remember = null;
     }
 
     /**
@@ -94,6 +175,8 @@ class PlayerHandler {
      */
     private void finishPlayer(Player p) {
         //TODO implement
+        players.remove(p);
+        ranking.add(p);
     }
 
     /**
