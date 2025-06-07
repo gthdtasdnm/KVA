@@ -83,6 +83,8 @@ class ActionHandler {
             game.getPlayerHandler().flagMissedMau(current);
         }
 
+
+
         if (chosenSuit != null && c.suit() == chosenSuit)
             chosenSuit = null;
 
