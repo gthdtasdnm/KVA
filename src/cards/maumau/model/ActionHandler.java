@@ -28,16 +28,15 @@ class ActionHandler {
      * @param player The player to be added to the game.
      */
     void addPlayer(Player player) {
-        //TODO implement
-        if (state == GameState.GAME_INITIALIZED)
-            game.getPlayerHandler().addPlayer(player);
+        if (state != GameState.GAME_INITIALIZED)
+            throw new IllegalStateException("cannot add players after game start");
+        game.getPlayerHandler().addPlayer(player);
     }
 
     /**
      * Starts the game.
      */
     void startGame() {
-        //TODO implement
         if (state != GameState.GAME_INITIALIZED)
             return;
         game.getCardHandler().dealCards();
@@ -48,7 +47,6 @@ class ActionHandler {
      * Transitions the game state to GAME_OVER.
      */
     void finishGame() {
-        //TODO implement
         state = GameState.GAME_OVER;
     }
 
@@ -56,7 +54,6 @@ class ActionHandler {
      * Transitions the game state to GAME_CANCELED.
      */
     void cancelGame() {
-        //TODO implement
         state = GameState.GAME_CANCELED;
     }
 
@@ -66,7 +63,6 @@ class ActionHandler {
      * @param c The card chosen by the player.
      */
     void chooseCard(Card c) {
-        //TODO implement
         if (state != GameState.PLAY)
             return;
         final Player current = game.getCurrentPlayer();
@@ -114,7 +110,6 @@ class ActionHandler {
      * @param suit The suit chosen by the player.
      */
     void chooseSuit(Suit suit) {
-        //TODO implement
         if (state != GameState.CHOOSE_SUIT)
             return;
         chosenSuit = suit;
@@ -126,7 +121,6 @@ class ActionHandler {
      * Lets the player skip a round.
      **/
     void skip() {
-        //TODO implement
         if (state != GameState.PLAY)
             return;
         if (ctr7 > 0)
@@ -142,7 +136,6 @@ class ActionHandler {
      * Handles the player saying "no 7" in the current state.
      */
     void no7() {
-        //TODO implement
         if (state != GameState.PLAY || ctr7 == 0)
             return;
         final Player current = game.getCurrentPlayer();
@@ -193,7 +186,6 @@ class ActionHandler {
      * Returns the current state of the game.
      */
     GameState getGameState() {
-        //TODO implement
         return state;
     }
 
@@ -204,7 +196,6 @@ class ActionHandler {
      * @return True if the card can be played, false otherwise.
      */
     boolean canPlay(Card c) {
-        //TODO implement
         if (state != GameState.PLAY || c == null)
             return false;
 

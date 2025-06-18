@@ -73,20 +73,16 @@ class CardHandler {
      * Deals cards to all players.
      */
     void dealCards() {
-        //TODO implement
         final List<Player> players = game.getPlayers();
-        System.out.println(players);
         for (int i = 0; i < numCardsPerPlayer; i++) {
-            for (Player p : players)
+            for (Player p : players) {
                 p.drawCards(1);
-
-
+            }
         }
+
         final Card c = drawCard();
         if (c != null)
             discard(c);
-
-
     }
 
     /**

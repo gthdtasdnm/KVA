@@ -122,8 +122,9 @@ class PlayerHandler {
      * @param p The player calling "Mau".
      */
     void mau(Player p) {
-        //TODO implement
-        state.mau(p);
+        if (p == getCurrentPlayer()) {
+            state.mau(p);
+        }
     }
 
     /**
@@ -132,8 +133,9 @@ class PlayerHandler {
      * @param p The player calling "Mau-Mau".
      */
     void maumau(Player p) {
-        //TODO implement
-        state.maumau(p);
+        if (p == getCurrentPlayer()) {
+            state.maumau(p);
+        }
     }
 
     /**
@@ -178,7 +180,11 @@ class PlayerHandler {
      * @throws IllegalArgumentException if a player with the same name already exists.
      */
     void addPlayer(Player player) {
-
+        for (Player p : players) {
+            if (p.getName().equals(player.getName())) {
+                throw new IllegalArgumentException("duplicate player: " + player.getName());
+            }
+        }
         players.add(player);
     }
 
@@ -188,11 +194,9 @@ class PlayerHandler {
      * @param n The number of turns to proceed.
      */
     private void localNextTurn(int n) {
-        //TODO implement
         if (players.isEmpty()) {
             return;
         }
-
 
         n = ((n % players.size()) + players.size()) % players.size();
         for (int i = 0; i < n; i++) {
@@ -206,7 +210,6 @@ class PlayerHandler {
      * @param p The player to finish.
      */
     private void finishPlayer(Player p) {
-        //TODO implement
         players.remove(p);
         ranking.add(p);
         if (penalized == p) {
